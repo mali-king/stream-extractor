@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: streamvault
+    env: docker
+    region: ohio # Central US 
+    plan: free
+    branch: main
+    healthCheckPath: /
+    envVars:
+      # Ensures output from our python script appears immediately in the Render logs
+      - key: PYTHONUNBUFFERED
+        value: "true"
