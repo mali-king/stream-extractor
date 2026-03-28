@@ -1,6 +1,163 @@
 /* =========================================================
    Stream Extractor — Client-side logic
+   Premium edition with scroll animations, counters, particles
    ========================================================= */
+
+// ─── Particle constellation background ───
+
+(function initParticles() {
+  const canvas = document.getElementById("particle-canvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let width, height, particles;
+  const PARTICLE_COUNT = 60;
+  const CONNECTION_DIST = 150;
+  let animId;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+
+  function createParticles() {
+    particles = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 2 + 0.5,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECTION_DIST) {
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
+          ctx.beginPath();
+          ctx.strokeStyle = `rgba(124, 58, 237, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // Draw particles
+    for (const p of particles) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(124, 58, 237, 0.4)";
+      ctx.fill();
+
+      // Move
+      p.x += p.vx;
+      p.y += p.vy;
+
+      // Bounce
+      if (p.x < 0 || p.x > width) p.vx *= -1;
+      if (p.y < 0 || p.y > height) p.vy *= -1;
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  resize();
+  createParticles();
+  draw();
+
+  window.addEventListener("resize", () => {
+    resize();
+    createParticles();
+  });
+})();
+
+// ─── Scroll-reveal animations (Intersection Observer) ───
+
+(function initScrollReveal() {
+  const reveals = document.querySelectorAll(".reveal");
+  if (!reveals.length) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+  );
+
+  reveals.forEach((el) => observer.observe(el));
+})();
+
+// ─── Animated number counters ───
+
+(function initCounters() {
+  const counters = document.querySelectorAll(".stat-number[data-target]");
+  if (!counters.length) return;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target, 10);
+          animateCounter(el, target);
+          observer.unobserve(el);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  counters.forEach((el) => observer.observe(el));
+
+  function animateCounter(el, target) {
+    const duration = 2000;
+    const start = performance.now();
+
+    function update(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.round(target * eased);
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target;
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+})();
+
+// ─── Smooth scroll for CTA ───
+
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", (e) => {
+    const target = document.querySelector(anchor.getAttribute("href"));
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+});
 
 // ─── Tab navigation ───
 
@@ -49,7 +206,11 @@ const STATUS_MESSAGES = [
   "Fetching page content\u2026",
   "Scanning for embedded video players\u2026",
   "Analyzing iframe sources\u2026",
+  "Checking player configurations\u2026",
   "Unpacking obfuscated scripts\u2026",
+  "Decoding hidden URLs\u2026",
+  "Launching stealth browser\u2026",
+  "Intercepting network streams\u2026",
   "Resolving stream URLs\u2026",
   "Almost there\u2026",
 ];
@@ -225,8 +386,10 @@ const PHOTO_STATUS_MESSAGES = [
   "Fetching page content\u2026",
   "Scanning for images\u2026",
   "Checking CSS backgrounds and meta tags\u2026",
-  "Launching headless browser for JS-rendered content\u2026",
+  "Launching stealth browser\u2026",
+  "Bypassing anti-bot protection\u2026",
   "Scrolling page to load lazy images\u2026",
+  "Intercepting network image requests\u2026",
   "Fetching image metadata\u2026",
   "Almost done\u2026",
 ];

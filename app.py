@@ -36,6 +36,11 @@ def index():
     return render_template("index.html")
 
 
+@app.route("/tool")
+def tool():
+    return render_template("tool.html")
+
+
 @app.route("/api/extract", methods=["POST"])
 def api_extract():
     data = request.get_json(silent=True) or {}

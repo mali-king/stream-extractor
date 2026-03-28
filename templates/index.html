@@ -3,14 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0a0a0f">
-  <title>Stream Extractor</title>
+  <meta name="theme-color" content="#06060b">
+  <meta name="description" content="StreamVault — Extract video streams and download photos from any webpage. Supports HLS, DASH, MP4 streams and bulk image downloads with anti-bot bypass.">
+  <title>StreamVault — Extract Videos & Photos from Any Website</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
+  <!-- Particle canvas background -->
+  <canvas id="particle-canvas" aria-hidden="true"></canvas>
+
   <!-- Animated background blobs -->
   <div class="bg-blobs" aria-hidden="true">
     <div class="blob blob-1"></div>
@@ -18,98 +22,210 @@
     <div class="blob blob-3"></div>
   </div>
 
-  <div class="container">
-    <header>
-      <div class="logo" aria-hidden="true">
-        <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-          <rect width="48" height="48" rx="12" fill="url(#logo-grad)"/>
+  <!-- ===== HERO — VIEWPORT 1 ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-inner">
+      <!-- Brand logo + name -->
+      <div class="hero-brand reveal">
+        <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="14" fill="url(#lg-hero)"/>
           <path d="M16 14v20l18-10L16 14z" fill="#fff" fill-opacity="0.95"/>
           <defs>
-            <linearGradient id="logo-grad" x1="0" y1="0" x2="48" y2="48">
+            <linearGradient id="lg-hero" x1="0" y1="0" x2="48" y2="48">
               <stop stop-color="#7c3aed"/>
               <stop offset="1" stop-color="#2563eb"/>
             </linearGradient>
           </defs>
         </svg>
-      </div>
-      <h1 class="title">Stream <span class="title-accent">Extractor</span></h1>
-      <p class="subtitle">Extract video streams and scrape photos from any webpage</p>
-    </header>
-
-    <!-- Tab Navigation -->
-    <nav class="tab-nav" role="tablist">
-      <button class="tab-btn active" data-tab="stream-tab" role="tab" aria-selected="true">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        Stream Extractor
-      </button>
-      <button class="tab-btn" data-tab="photo-tab" role="tab" aria-selected="false">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <polyline points="21 15 16 10 5 21"/>
-        </svg>
-        Photo Extractor
-      </button>
-    </nav>
-
-    <!-- ===== STREAM TAB ===== -->
-    <div id="stream-tab" class="tab-content active">
-      <div class="extract-card">
-        <form id="extract-form" autocomplete="off">
-          <div class="input-group">
-            <div class="input-wrapper">
-              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-              </svg>
-              <input type="url" id="url-input" placeholder="https://example.com/video-page" required autofocus>
-            </div>
-            <button type="submit" id="submit-btn">
-              <span class="btn-text">Extract Streams</span>
-              <span class="btn-loader hidden"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
-            </button>
-          </div>
-        </form>
-        <div id="loading-status" class="loading-status hidden"></div>
+        <span class="hero-brand-name">StreamVault</span>
       </div>
 
-      <div id="error" class="error hidden"></div>
-      <div id="results" class="results hidden"></div>
+      <h1 class="hero-title reveal">
+        Extract <span class="gradient-text">Streams</span> &
+        <span class="gradient-text-2">Photos</span><br>
+        From Any Website
+      </h1>
+
+      <p class="hero-subtitle reveal">
+        The most powerful media extraction engine on the web. Pull video streams, download entire photo galleries, and bypass anti-bot protection — all from a single URL.
+      </p>
+
+      <div class="hero-actions reveal">
+        <a href="/tool" class="hero-cta" id="hero-cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Start Extracting
+        </a>
+        <a href="#features" class="hero-cta-secondary">
+          Learn More
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <polyline points="19 12 12 19 5 12"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Stats row — inline in hero -->
+      <div class="hero-stats reveal">
+        <div class="hero-stat">
+          <span class="hero-stat-num" data-target="500">0</span><span class="hero-stat-plus">+</span>
+          <span class="hero-stat-label">Sites</span>
+        </div>
+        <div class="hero-stat-dot"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" data-target="10">0</span><span class="hero-stat-plus">+</span>
+          <span class="hero-stat-label">Formats</span>
+        </div>
+        <div class="hero-stat-dot"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-num" data-target="100">0</span><span class="hero-stat-plus">%</span>
+          <span class="hero-stat-label">Free</span>
+        </div>
+      </div>
+
+      <!-- Creator credit -->
+      <div class="hero-credit reveal">
+        Developed by <span>Abdirahman Hussein</span>
+      </div>
+
+      <!-- Floating tech icons -->
+      <div class="hero-floaters" aria-hidden="true">
+        <div class="floater floater-1">HLS</div>
+        <div class="floater floater-2">MP4</div>
+        <div class="floater floater-3">DASH</div>
+        <div class="floater floater-4">4K</div>
+        <div class="floater floater-5">WebM</div>
+      </div>
     </div>
+  </section>
 
-    <!-- ===== PHOTO TAB ===== -->
-    <div id="photo-tab" class="tab-content">
-      <div class="extract-card">
-        <form id="photo-extract-form" autocomplete="off">
-          <div class="input-group">
-            <div class="input-wrapper">
-              <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-              </svg>
-              <input type="url" id="photo-url-input" placeholder="https://example.com/gallery-page" required>
-            </div>
-            <button type="submit" id="photo-submit-btn">
-              <span class="btn-text">Extract Photos</span>
-              <span class="btn-loader hidden"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
-            </button>
+  <!-- ===== FEATURES + HOW IT WORKS — VIEWPORT 2 ===== -->
+  <section class="info-section" id="features">
+    <div class="info-inner">
+      <!-- Features row -->
+      <div class="features-grid reveal">
+        <div class="feature-card">
+          <div class="feature-icon-wrap">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
           </div>
-        </form>
-        <div id="photo-loading-status" class="loading-status hidden"></div>
+          <h3>Stream Extraction</h3>
+          <p>HLS, DASH, MP4, WebM — supports JWPlayer, VideoJS, Clappr, packed JS, and network interception.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap feature-icon-blue">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+          <h3>Photo Scraper</h3>
+          <p>Bulk download full galleries. Detects lazy-loaded, CSS backgrounds, high-res variants, and meta images.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon-wrap feature-icon-emerald">
+            <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3>Anti-Bot Bypass</h3>
+          <p>Stealth browser with fingerprint masking, human simulation, and Cloudflare bypass built in.</p>
+        </div>
       </div>
 
-      <div id="photo-error" class="error hidden"></div>
-      <div id="photo-results" class="results hidden"></div>
+      <!-- How it works — compact row -->
+      <div class="hiw-row reveal">
+        <div class="hiw-chip">
+          <span class="hiw-num">01</span>
+          <div><strong>Paste URL</strong><br><span>Any webpage — streaming, gallery, social media</span></div>
+        </div>
+        <div class="hiw-arrow" aria-hidden="true">→</div>
+        <div class="hiw-chip">
+          <span class="hiw-num">02</span>
+          <div><strong>Deep Scan</strong><br><span>10-layer engine: iframes, scripts, player configs, network</span></div>
+        </div>
+        <div class="hiw-arrow" aria-hidden="true">→</div>
+        <div class="hiw-chip">
+          <span class="hiw-num">03</span>
+          <div><strong>Download</strong><br><span>Copy stream URLs for VLC/IINA or bulk-download photos</span></div>
+        </div>
+      </div>
+
+      <!-- Format marquee -->
+      <div class="marquee-strip" aria-hidden="true">
+        <div class="marquee-scroll">
+          <span>HLS / m3u8</span><span class="md">●</span>
+          <span>DASH / mpd</span><span class="md">●</span>
+          <span>MP4</span><span class="md">●</span>
+          <span>WebM</span><span class="md">●</span>
+          <span>MKV</span><span class="md">●</span>
+          <span>FLV</span><span class="md">●</span>
+          <span>JPEG</span><span class="md">●</span>
+          <span>PNG</span><span class="md">●</span>
+          <span>WebP</span><span class="md">●</span>
+          <span>SVG</span><span class="md">●</span>
+          <span>AVIF</span><span class="md">●</span>
+          <span>GIF</span><span class="md">●</span>
+          <span>HLS / m3u8</span><span class="md">●</span>
+          <span>DASH / mpd</span><span class="md">●</span>
+          <span>MP4</span><span class="md">●</span>
+          <span>WebM</span><span class="md">●</span>
+          <span>MKV</span><span class="md">●</span>
+          <span>FLV</span><span class="md">●</span>
+          <span>JPEG</span><span class="md">●</span>
+          <span>PNG</span><span class="md">●</span>
+          <span>WebP</span><span class="md">●</span>
+          <span>SVG</span><span class="md">●</span>
+          <span>AVIF</span><span class="md">●</span>
+          <span>GIF</span><span class="md">●</span>
+        </div>
+      </div>
+
+      <!-- CTA banner -->
+      <div class="bottom-cta reveal">
+        <a href="/tool" class="hero-cta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          Open StreamVault
+        </a>
+      </div>
     </div>
-  </div>
+  </section>
 
   <footer>
-    <div class="footer-divider"></div>
-    <p class="footer-credit">Developed by Abdirahman Hussein All rights Reserved</p>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="24" height="24" viewBox="0 0 48 48" fill="none">
+          <rect width="48" height="48" rx="12" fill="url(#lg-f)"/>
+          <path d="M16 14v20l18-10L16 14z" fill="#fff" fill-opacity="0.95"/>
+          <defs>
+            <linearGradient id="lg-f" x1="0" y1="0" x2="48" y2="48">
+              <stop stop-color="#7c3aed"/>
+              <stop offset="1" stop-color="#2563eb"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span class="footer-name">StreamVault</span>
+      </div>
+      <p class="footer-credit">Developed by Abdirahman Hussein &mdash; All Rights Reserved</p>
+    </div>
   </footer>
 
-  <script src="/static/script.js"></script>
+  <script>
+    // Particles
+    (function(){const c=document.getElementById('particle-canvas');if(!c)return;const x=c.getContext('2d');let w,h,p;const N=50,D=140;function rs(){w=c.width=innerWidth;h=c.height=innerHeight}function cr(){p=[];for(let i=0;i<N;i++)p.push({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.35,vy:(Math.random()-.5)*.35,s:Math.random()*1.8+.5})}function dr(){x.clearRect(0,0,w,h);for(let i=0;i<p.length;i++)for(let j=i+1;j<p.length;j++){const dx=p[i].x-p[j].x,dy=p[i].y-p[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<D){x.beginPath();x.strokeStyle=`rgba(124,58,237,${(1-d/D)*.12})`;x.lineWidth=.5;x.moveTo(p[i].x,p[i].y);x.lineTo(p[j].x,p[j].y);x.stroke()}}for(const q of p){x.beginPath();x.arc(q.x,q.y,q.s,0,Math.PI*2);x.fillStyle='rgba(124,58,237,.35)';x.fill();q.x+=q.vx;q.y+=q.vy;if(q.x<0||q.x>w)q.vx*=-1;if(q.y<0||q.y>h)q.vy*=-1}requestAnimationFrame(dr)}rs();cr();dr();addEventListener('resize',()=>{rs();cr()})})();
+    // Scroll reveal
+    (function(){const els=document.querySelectorAll('.reveal');if(!els.length)return;const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');o.unobserve(en.target)}})},{threshold:.1,rootMargin:'0px 0px -20px 0px'});els.forEach(el=>o.observe(el))})();
+    // Counters
+    (function(){const els=document.querySelectorAll('[data-target]');if(!els.length)return;const o=new IntersectionObserver(e=>{e.forEach(en=>{if(en.isIntersecting){const el=en.target,t=+el.dataset.target,s=performance.now();(function u(n){const p=Math.min((n-s)/1800,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3)));p<1?requestAnimationFrame(u):el.textContent=t})(s);o.unobserve(el)}})},{threshold:.5});els.forEach(el=>o.observe(el))})();
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}})});
+  </script>
 </body>
 </html>

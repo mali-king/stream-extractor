@@ -1,0 +1,110 @@
+/* ============================================================
+   Tool Page — Dedicated styles
+   ============================================================ */
+
+.tool-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 32px;
+  background: rgba(6, 6, 11, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.tool-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s;
+}
+
+.tool-brand:hover {
+  opacity: 0.8;
+}
+
+.tool-brand svg {
+  flex-shrink: 0;
+}
+
+.tool-back-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.tool-back-link:hover {
+  color: var(--text);
+}
+
+.tool-page {
+  position: relative;
+  z-index: 1;
+  padding-top: 100px;
+  padding-bottom: 60px;
+  min-height: 100vh;
+}
+
+.tool-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.tool-header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fade-in-down 0.6s ease-out;
+}
+
+.tool-title {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.tool-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .tool-topbar {
+    padding: 12px 16px;
+  }
+
+  .tool-brand span {
+    display: none;
+  }
+
+  .tool-page {
+    padding-top: 80px;
+  }
+
+  .tool-container {
+    padding: 0 16px;
+  }
+}
