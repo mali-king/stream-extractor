@@ -344,8 +344,8 @@ function renderPhotoResults(photos) {
              onload="window._updateDim(this)"
              onerror="this.parentElement.innerHTML='<div class=\\'photo-thumb-placeholder\\'>Failed to load</div>'">
         <div class="photo-thumb-overlay">
-          <a href="${attr(photo.url)}" download="${attr(photo.filename)}"
-             target="_blank" rel="noopener noreferrer" class="photo-overlay-btn">
+          <a href="/api/download-photo?url=${encodeURIComponent(photo.url)}&filename=${encodeURIComponent(photo.filename)}"
+             download="${attr(photo.filename)}" class="photo-overlay-btn">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
               <polyline points="7 10 12 15 17 10"/>
@@ -369,15 +369,13 @@ function renderPhotoResults(photos) {
   photoResultsEl.appendChild(grid);
   photoResultsEl.classList.remove("hidden");
 
-  // Download All handler
+  // Download All handler — routes through server proxy for direct save
   document.getElementById("download-all-btn").addEventListener("click", () => {
     photos.forEach((photo, i) => {
       setTimeout(() => {
         const a = document.createElement("a");
-        a.href = photo.url;
+        a.href = `/api/download-photo?url=${encodeURIComponent(photo.url)}&filename=${encodeURIComponent(photo.filename)}`;
         a.download = photo.filename;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

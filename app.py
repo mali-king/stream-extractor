@@ -6,8 +6,10 @@ import os
 import socket
 from urllib.parse import urlparse
 
-from flask import Flask, render_template, request, jsonify
-from extractor import extract_streams, _has_ytdlp
+import urllib.request
+
+from flask import Flask, render_template, request, jsonify, Response
+from extractor import extract_streams, _has_ytdlp, UA
 from photo_extractor import extract_photos
 
 app = Flask(__name__)
@@ -86,6 +88,46 @@ def api_extract_photos():
         return jsonify({"error": "No images found on this page."}), 404
 
     return jsonify({"url": url, "results": photos, "count": len(photos)})
+
+
+@app.route("/api/download-photo")
+def api_download_photo():
+    """Proxy-download an image so the browser saves it directly."""
+    url = (request.args.get("url") or "").strip()
+    filename = request.args.get("filename") or "image"
+
+    if not url or not url.startswith(("http://", "https://")):
+        return jsonify({"error": "Invalid URL."}), 400
+
+    try:
+        _validate_url(url)
+    except ValueError as e:
+        return jsonify({"error": str(e)}), 400
+
+    try:
+        req = urllib.request.Request(url, headers={
+            "User-Agent": UA,
+            "Accept": "image/*,*/*",
+        })
+        resp = urllib.request.urlopen(req, timeout=15)
+        content_type = resp.headers.get("Content-Type", "application/octet-stream")
+
+        def stream():
+            while True:
+                chunk = resp.read(8192)
+                if not chunk:
+                    break
+                yield chunk
+
+        return Response(
+            stream(),
+            content_type=content_type,
+            headers={
+                "Content-Disposition": f'attachment; filename="{filename}"',
+            },
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
